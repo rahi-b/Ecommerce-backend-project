@@ -12,7 +12,7 @@ const shop=(req,res)=>{
     res.render('product');
 }
 const features=(req,res)=>{
-    res.render('product-details');
+    res.render('shoping-cart');
 }
 const blog=(req,res)=>{
     res.render('blog');
@@ -26,5 +26,8 @@ const contact=(req,res)=>{
 const signup=(req,res)=>{
     res.render('signup');
 }
-module.exports={homepage,homepage2,homepage3,shop,features,blog,about,contact,signup};
+const forgotten=(req,res)=>{
+    res.render('forgotten');
+}
+module.exports={homepage,homepage2,homepage3,shop,features,blog,about,contact,signup,forgotten};
 

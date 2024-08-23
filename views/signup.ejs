@@ -15,23 +15,23 @@
         </div>
     
         <div id="login-form">
-            <form>
-                <input type="text" placeholder="Enter email or username"/>
-                <input type="password" placeholder="Enter password"/>
-                <button type="button" class="btn login">login</button>
-                <p><a href="javascript:void(0)">Forgotten account</a></p>
+            <form action="/api/user/login" method="POST" >
+                <input type="text" name="email" placeholder="Enter email" required/>
+                <input type="password" name="password" placeholder="Enter password" required/>
+                <button type="submit" class="btn login">login</button>
+                <p><a href="/forgotten">Forgotten password</a></p>
                 <hr/>
     
             </form>
         </div>
     
         <div id="signup-form">
-            <form>
-                <input type="text" placeholder="Choose username"/>
-                <input type="email" placeholder="Enter your email"/>
-                <input type="password" placeholder="Create password"/>
-                <input type="number" placeholder="Phone number"/>
-                <button type="button" class="btn signup">create account</button>
+            <form action="/api/user/register" method="POST" class="signup" >
+                <input type="text" name="name" placeholder="Choose username" required />
+                <input type="email" name="email" placeholder="Enter your email" required/>
+                <input type="number" name="mobile" placeholder="Phone number" required/>
+                <input type="password" name="password" placeholder="Create password" required/>
+                <button type="submit" class="btn signup">create account</button>
                 <p>Clicking <strong>create account</strong> means that you are agree to our <a href="javascript:void(0)">terms of services</a>.</p>
                 <hr/>
                
