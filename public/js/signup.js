@@ -5,9 +5,9 @@ function toggleSignup(){
      document.getElementById("signup-toggle").style.color="#fff";
      document.getElementById("login-form").style.display="none";
      document.getElementById("signup-form").style.display="block";
+     
  }
  
- console.log('hello')
  function toggleLogin(){
      document.getElementById("login-toggle").style.backgroundColor="#57B846";
      document.getElementById("login-toggle").style.color="#fff";
@@ -17,3 +17,7 @@ function toggleSignup(){
      document.getElementById("login-form").style.display="block";
  }
  
+
+function change (e){
+            console.log(typeof e.target.value)
+}

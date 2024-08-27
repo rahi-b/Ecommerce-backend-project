@@ -29,5 +29,8 @@ const signup=(req,res)=>{
 const forgotten=(req,res)=>{
     res.render('forgotten');
 }
-module.exports={homepage,homepage2,homepage3,shop,features,blog,about,contact,signup,forgotten};
+const otpverfication=(req,res)=>{
+    res.render('otpverification');
+}
+module.exports={homepage,homepage2,homepage3,shop,features,blog,about,contact,signup,forgotten,otpverfication};
 

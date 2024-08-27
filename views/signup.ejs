@@ -15,10 +15,11 @@
         </div>
     
         <div id="login-form">
-            <form action="/api/user/login" method="POST" >
-                <input type="text" name="email" placeholder="Enter email" required/>
+            <form>
+                <input type="text" name="email" id="typeemail" placeholder="Enter email" required/>
                 <input type="password" name="password" placeholder="Enter password" required/>
-                <button type="submit" class="btn login">login</button>
+                <p id="showerror" style="display: none ; color: red; text-align: center;" > invalid email try again</p>
+                <button type="button" onclick="" id="btnpress" class=" btn login">login</button>
                 <p><a href="/forgotten">Forgotten password</a></p>
                 <hr/>
     
@@ -40,6 +41,35 @@
     
     </div>
     <script src="js/signup.js"></script>
+    <script>
+        document.getElementById('btnpress').addEventListener('click',function(){
+            const email=document.getElementById('typeemail').value;
+            const password = document.querySelector('input[name="password"]').value;
+
+        if(email && password) {
+        fetch('/api/user/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email ,password})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success==false) {
+                document.getElementById('showerror').style.display="block";
+
+            } else {
+                window.location.href='/';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+        })
+    </script>    
 </body>
 </html>
 

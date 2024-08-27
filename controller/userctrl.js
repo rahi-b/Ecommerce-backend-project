@@ -18,7 +18,7 @@ const createUser = async (req, res) => {
   } catch (err) {
     //server error
     console.error(err);
-    res.status(500).json({ message: "interval server error" });
+    res.status(500).json({ success: false, message: "interval server error" });
   }
 };
 
@@ -30,7 +30,7 @@ let login = async (req, res) => {
     if (finduser) {
       //session creation
       req.session.email = finduser.email;
-      res.status(200).redirect('/');
+      res.status(200).json({success:true, message:"successfully"});
     } else {
       res.status(200).json({success:false,message:"invalid username"});
     }
@@ -50,7 +50,7 @@ const forgetPassword=async(req,res)=>{
     //find the user by email
     const findUser=await User.findOne({email:email});
     if(!findUser){
-      res.status(404).json({message:"user not found"})
+      return res.status(404).json({success : false , message:"user not found"})
     }
     //Generate webtoken
     const resetToken=jwt.sign({id:findUser?._id},process.env.JWT_SECRET,{expiresIn:'30m'})
@@ -62,36 +62,67 @@ const forgetPassword=async(req,res)=>{
     req.session.otp=otp;
     //send the mail
     await sendEmail({
-      email:findUser.email,
+      email,
       subject:"Password reset request",
       message:`your password changing process your otp is :${otp}`
       
     });
-    console.log(req.body)
-    res.status(200).json({message:"password reset message send your email"});
+    // console.log(req.body)
+    res.status(200).json({success  :true , message:"password reset message send your email"});
   }catch(error){
     console.error(error.message);
-    res.status(500).json({ message: "interval server error" });
+    res.status(500).json({success : false ,  message: "internal server error" });
 }
 
 }
 
 const verifyOtp = (req , res) => {
   try {
-    const {userOtp} = req.body;
+
+    const {otp: userOtp} = req.body;
     const {otp}  = req.session;
-    if(userOtp === otp){
+
+    if(!otp){
+      return res.status(400).json({success:false, message:"OTP is not found or Expired"});
+    }
+    if(userOtp === otp.toString()){
       res.status(200).json({success : true , message : "succesfully verified"})
     }else{
       
       res.status(200).json({success : false , message : " verification failed"})
     }
   } catch (error) {
-    
+    console.error(error);
   }
+}
+
+const resetPassword=async (req,res)=>{
+  try {
+    
+    const {token, newpassword}=req.body;
+
+    const decoded=jwt.verify(token,process.env.JWT_SECRET);
+    const userId=decoded.id;
+
+    const user=await User.findById(userId);
+
+    if(!user){
+      return res.status(404).json({success:false, message:"user not found"});
+    }
+
+    const hashPassword=await bcrypt.hash(newpassword,10);
+
+    user.password=hashPassword;
+    // await user.save();
+
+    res.status(200).json({success:true, message:"your password reset is successfully"});
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({success:false, message:"Internal server error"});
+  }
+
 }
 
 
 
-
-module.exports = { createUser, login,forgetPassword };
+module.exports = { createUser, login,forgetPassword , verifyOtp};
