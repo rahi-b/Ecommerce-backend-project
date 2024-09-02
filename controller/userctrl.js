@@ -2,6 +2,7 @@ const User = require("../models/usermodel");
 const jwt =require('jsonwebtoken');
 const asyncHandler = require("async-handler");
 const sendEmail=require('../utilities/sendemails');
+const bcrypt=require('bcrypt');
 
 const createUser = async (req, res) => {
   try {
@@ -48,6 +49,7 @@ const forgetPassword=async(req,res)=>{
     // console.log(req.body)
     const {email} =req.body;
     //find the user by email
+    req.session.email=email;
     const findUser=await User.findOne({email:email});
     if(!findUser){
       return res.status(404).json({success : false , message:"user not found"})
@@ -99,12 +101,20 @@ const verifyOtp = (req , res) => {
 const resetPassword=async (req,res)=>{
   try {
     
-    const {token, newpassword}=req.body;
+    const {newpassword, confirmpassword}=req.body;
 
-    const decoded=jwt.verify(token,process.env.JWT_SECRET);
-    const userId=decoded.id;
+    console.log(newpassword, confirmpassword);
 
-    const user=await User.findById(userId);
+    const email =req.session.email;
+
+    if(!email){
+      return res.status(400).json({success:false,message:"No email found in session"});
+    }
+
+    if( newpassword  !== confirmpassword){
+      return res.status(400).json({success:false ,message:'password do not match'});
+    }
+    const user=await User.findOne({email:email});
 
     if(!user){
       return res.status(404).json({success:false, message:"user not found"});
@@ -113,16 +123,16 @@ const resetPassword=async (req,res)=>{
     const hashPassword=await bcrypt.hash(newpassword,10);
 
     user.password=hashPassword;
-    // await user.save();
+    await user.save();
 
     res.status(200).json({success:true, message:"your password reset is successfully"});
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({success:false, message:"Internal server error"});
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 
 }
 
 
 
-module.exports = { createUser, login,forgetPassword , verifyOtp};
+module.exports = { createUser, login,forgetPassword , verifyOtp, resetPassword};

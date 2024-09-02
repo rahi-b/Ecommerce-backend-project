@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Montserrat|Quicksand');
+ @import url('https://fonts.googleapis.com/css?family=Montserrat|Quicksand');
 
 *{
     font-family: 'quicksand',Arial, Helvetica, sans-serif;
@@ -30,7 +30,7 @@ body{
     font-size:1em;
     z-index: 2;
     outline: none;
-    background:#fff;
+    background:#ffffff;
     transition:0.2s;
 }
 
@@ -46,12 +46,17 @@ body{
     margin-top:0.5em;
 }
 
-.form-modal .login , .form-modal .signup{
+.form-modal .login , .signup{
     background:#57b846;
-    color:#fff;
+    color:#ffffff;
 }
-
-.form-modal .login:hover , .form-modal .signup:hover{
+#btn-signup2{
+  background-color: #57b846;
+}
+#btn-signup2:hover{
+  background-color: black;
+}
+.form-modal .login:hover{
     background:#222;
 }
 
@@ -89,10 +94,10 @@ body{
 
 .form-modal form{
     position: relative;
-    width:90%;
     height:auto;
     left:50%;
-    transform:translateX(-50%);  
+    transform:translateX(-50%);
+    background-color: #ffffff;  
 }
 
 #login-form , #signup-form{
@@ -122,7 +127,7 @@ body{
     margin-bottom:0.6em;
     border-radius: 20px;
     border:none;
-    background:#ebebeb;
+    background:#e6e1e1;
     outline:none;
     font-weight: bold;
     transition:0.4s;
@@ -186,4 +191,6 @@ body{
     i{
         display: none!important;
     }
-} 
+}  
+  
+

@@ -11,11 +11,17 @@ const homepage3=(req,res)=>{
 const shop=(req,res)=>{
     res.render('product');
 }
+const productdetail=(req,res)=>{
+    res.render('product-detail')
+}
 const features=(req,res)=>{
     res.render('shoping-cart');
 }
 const blog=(req,res)=>{
     res.render('blog');
+}
+const blogdetail=(req,res)=>{
+    res.render('blog-detail');
 }
 const about=(req,res)=>{
     res.render('about');
@@ -32,5 +38,8 @@ const forgotten=(req,res)=>{
 const otpverfication=(req,res)=>{
     res.render('otpverification');
 }
-module.exports={homepage,homepage2,homepage3,shop,features,blog,about,contact,signup,forgotten,otpverfication};
+const resetPassword=(req,res)=>{
+    res.render('resetpassword');
+}
+module.exports={homepage,homepage2,homepage3,shop,features,blog,about,contact,signup,forgotten,otpverfication,resetPassword,productdetail,blogdetail};
 
