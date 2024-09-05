@@ -6,6 +6,7 @@ var userSchema = new mongoose.Schema({
     name:{
         type:String,
         required:true,
+        trim:true
     },
     email:{
         type:String,
@@ -14,6 +15,10 @@ var userSchema = new mongoose.Schema({
     mobile:{
         type:String,
         required:true,
+    },
+    isAdmin:{
+        type:Boolean,
+        default:false
     },
     password:{
         type:String,

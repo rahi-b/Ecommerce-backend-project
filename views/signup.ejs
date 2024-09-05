@@ -27,18 +27,16 @@
         </div>
     
         <div id="signup-form">
-            <form action="/api/user/register" method="POST" class="signup" >
+            <form action="/api/authroute/register" method="POST" class="signup" >
                 <input type="text" name="name" placeholder="Choose username" required />
                 <input type="email" name="email" placeholder="Enter your email" required/>
                 <input type="number" name="mobile" placeholder="Phone number" required/>
                 <input type="password" name="password" placeholder="Create password" required/>
-            <!-- role selection -->
-               <select name="role" id="role" required>
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-               </select>
-
-               <input type="text" style="display: none;" name="adminCode" id="adminCode" placeholder="Admin Code" />
+             <!-- role selection -->
+               <!-- <select name="isAdmin" id="role" required>
+                <option value="false">User</option>
+                <option value="true">Admin</option>
+               </select>  -->
 
                <button type="submit" class="btn signup" id="btn-signup2">create account</button>
                
@@ -49,29 +47,29 @@
     </div>
     <script src="js/signup.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded',function(){
+        // document.addEventListener('DOMContentLoaded',function(){
 
-        const roleSelect=document.getElementById('role');
-        const adminCodeInput=document.getElementById('adminCode');
+        // const roleSelect=document.getElementById('role');
+        // const adminCodeInput=document.getElementById('adminCode');
 
-        roleSelect.addEventListener('change',function(){
-            if(roleSelect.value=='admin'){
-                adminCodeInput.setAttribute('required','required');
-                adminCodeInput.style.display='block';
-            }else{
-                adminCodeInput.removeAttribute('required');
-                adminCodeInput.style.display='none';
-                adminCodeInput.value='';
+        // roleSelect.addEventListener('change',function(){
+        //     if(roleSelect.value=='admin'){
+        //         adminCodeInput.setAttribute('required','required');
+        //         adminCodeInput.style.display='block';
+        //     }else{
+        //         adminCodeInput.removeAttribute('required');
+        //         adminCodeInput.style.display='none';
+        //         adminCodeInput.value='';
 
-            }
-        })
+        //     }
+        // })
 
         document.getElementById('btnpress').addEventListener('click',function(){
             const email=document.getElementById('typeemail').value;
             const password = document.querySelector('input[name="password"]').value;
 
         if(email && password) {
-        fetch('/api/user/login', {
+        fetch('/api/authroute/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -84,7 +82,7 @@
                 document.getElementById('showerror').style.display="block";
 
             } else {
-                window.location.href='/';
+                window.location.href=data.redirectUrl;
             }
         })
         .catch(error => {
@@ -94,7 +92,7 @@
 
         });
 
-    }); 
+    // }); 
     </script>    
 </body>
 </html>

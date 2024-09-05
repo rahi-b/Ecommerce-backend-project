@@ -1,17 +1,25 @@
 const User = require("../models/usermodel");
 const jwt =require('jsonwebtoken');
-const asyncHandler = require("async-handler");
 const sendEmail=require('../utilities/sendemails');
 const bcrypt=require('bcrypt');
 
-const createUser = async (req, res) => {
+const signup = async (req, res) => {
   try {
     const { name , email  , password , mobile} = req.body;
+
     const findUser = await User.findOne({ email: email });
+
+
     if (!findUser) {
-      //create new user
-      newUser = await User.create(req.body); 
-      res.status(200).redirect('/');
+
+      const newUser= await User.create({name:name,email:email,mobile:mobile,password:password,isAdmin:isAdmin})
+
+      if(findUser.isAdmin == true){
+        res.status(200).redirect('/about');
+      }else{
+        res.status(200).redirect('/');
+      }
+      
     } else {
       //user already have message
       res.status(404).redirect('/signup');
@@ -27,11 +35,16 @@ let login = async (req, res) => {
   try {
     //finding registed user
     const { email, password } = req.body;
-    finduser = await User.findOne({ email: email, password: password });
-    if (finduser) {
+    findUser = await User.findOne({ email: email, password: password });
+    if (findUser && await bcrypt.compare(password,findUser.password)) {
       //session creation
-      req.session.email = finduser.email;
-      res.status(200).json({success:true, message:"successfully"});
+      req.session.email = findUser.email;
+      if(findUser.isAdmin){
+        res.status(200).json({success:true, message:"Admin login successfully", redirectUrl:"/about" });
+      }
+      else{
+        res.status(200).json({success:true, message:"User login successfully", redirectUrl:"/" });
+      }
     } else {
       res.status(200).json({success:false,message:"invalid username"});
     }
@@ -135,4 +148,4 @@ const resetPassword=async (req,res)=>{
 
 
 
-module.exports = { createUser, login,forgetPassword , verifyOtp, resetPassword};
+module.exports = { signup, login,forgetPassword , verifyOtp, resetPassword};
