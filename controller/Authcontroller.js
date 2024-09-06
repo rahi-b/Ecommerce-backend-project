@@ -12,9 +12,11 @@ const signup = async (req, res) => {
 
     if (!findUser) {
 
-      const newUser= await User.create({name:name,email:email,mobile:mobile,password:password,isAdmin:isAdmin})
+      const hashedpassword=await bcrypt.hash(password,10);
 
-      if(findUser.isAdmin == true){
+      const newUser= await User.create({name:name,email:email,mobile:mobile,password:hashedpassword, isAdmin : false})
+
+      if(newUser.isAdmin){
         res.status(200).redirect('/about');
       }else{
         res.status(200).redirect('/');
@@ -35,22 +37,32 @@ let login = async (req, res) => {
   try {
     //finding registed user
     const { email, password } = req.body;
-    findUser = await User.findOne({ email: email, password: password });
-    if (findUser && await bcrypt.compare(password,findUser.password)) {
-      //session creation
-      req.session.email = findUser.email;
-      if(findUser.isAdmin){
-        res.status(200).json({success:true, message:"Admin login successfully", redirectUrl:"/about" });
-      }
-      else{
-        res.status(200).json({success:true, message:"User login successfully", redirectUrl:"/" });
-      }
-    } else {
-      res.status(200).json({success:false,message:"invalid username"});
+
+
+
+    if(!email || !password){
+      return res.status(400).json({success:false,message:"Missing email or password"});
     }
+
+    const findUser = await User.findOne({ email: email});
+    if (!findUser){
+      return res.status(401).json({success:false,message:"Invalid email or password"});
+    }
+      //session creation
+      const isMatch=await bcrypt.compare(password,findUser.password)
+      if(!isMatch){
+        return res.status(401).json({success:false,message:"Invalid email or password"});
+      }
+        req.session.email = findUser.email;
+
+        if(findUser.isAdmin){
+         return res.status(200).json({success:true, message:"Admin login successfully", redirectUrl:"/about" });
+        }
+        else{
+         return res.status(200).json({success:true, message:"User login successfully", redirectUrl:"/" });
+        }
   } catch (err) {
     //server error passing
-    console.error(err);
     res.status(500).json({ message: "interval server error" });
   }
 };

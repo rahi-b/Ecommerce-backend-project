@@ -1,33 +1,33 @@
 
 const homepage=(req,res)=>{
-    res.render('index');
+    res.render('user/index');
 }
 const homepage2=(req,res)=>{
-    res.render('home-02');
+    res.render('user/home-02');
 }
 const homepage3=(req,res)=>{
-    res.render('home-03');
+    res.render('user/home-03');
 }
 const shop=(req,res)=>{
-    res.render('product');
+    res.render('user/product');
 }
 const productdetail=(req,res)=>{
-    res.render('product-detail')
+    res.render('user/product-detail')
 }
 const features=(req,res)=>{
-    res.render('shoping-cart');
+    res.render('user/shoping-cart');
 }
 const blog=(req,res)=>{
-    res.render('blog');
+    res.render('user/blog');
 }
 const blogdetail=(req,res)=>{
-    res.render('blog-detail');
+    res.render('user/blog-detail');
 }
 const about=(req,res)=>{
-    res.render('about');
+    res.render('user/about');
 }
 const contact=(req,res)=>{
-    res.render('contact');
+    res.render('user/contact');
 }
 const signup=(req,res)=>{
     res.render('signup');
