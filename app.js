@@ -21,7 +21,8 @@ app.use(
     cookie: { secure: false },
   })
 );
-app.use(express.static("public"));
+app.use(express.static("public/User"));
+app.use(express.static("public/admin"));
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(homeRouter);

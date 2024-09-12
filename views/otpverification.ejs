@@ -49,7 +49,7 @@
 
         const otp=Array.from(inputs).map(inputs=>inputs.value).join('');
 
-        fetch('/api/user/verifiedOtp',{
+        fetch('/api/authroute/verifiedOtp',{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

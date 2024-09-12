@@ -17,7 +17,7 @@ const signup = async (req, res) => {
       const newUser= await User.create({name:name,email:email,mobile:mobile,password:hashedpassword, isAdmin : false})
 
       if(newUser.isAdmin){
-        res.status(200).redirect('/about');
+        res.status(200).redirect('/admin-home');
       }else{
         res.status(200).redirect('/');
       }
@@ -56,7 +56,7 @@ let login = async (req, res) => {
         req.session.email = findUser.email;
 
         if(findUser.isAdmin){
-         return res.status(200).json({success:true, message:"Admin login successfully", redirectUrl:"/about" });
+         return res.status(200).json({success:true, message:"Admin login successfully", redirectUrl:"/admin-home" });
         }
         else{
          return res.status(200).json({success:true, message:"User login successfully", redirectUrl:"/" });
