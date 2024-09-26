@@ -1,4 +1,10 @@
-const Admin=require('../models/adminmodel');
 
+const adminhome=async(req,res)=>{
+    try {
+        res.render('admin/index');
+    } catch (error) {
+        console.error(error.message);
+    }
+}
 
-module.exports= {}
+module.exports={adminhome}

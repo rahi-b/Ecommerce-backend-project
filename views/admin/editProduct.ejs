@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Edit Product</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-dark min-vh-100 position-fixed sidebar collapse">
+        <img src="/images/royal-store-logo.png" class="w-50 p-3" alt="IMG-LOGO">
+        <div class="pt-3">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link active fs-5" aria-current="page" href="/api/admin/admin-home" style="color:#5bc255">
+                <i class="bi bi-speedometer2 fa fa-tachometer" style="color:#5bc255"></i> Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link fs-5" href="/api/admin/category" style="color:#5bc255">
+                <i class="bi bi-box-seam fas fa-chart-line" style="color:#5bc255"></i> Categories
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link fs-5" href="/api/admin/addproduct" style="color:#5bc255">
+                <i class="bi bi-tag fas fa-shopping-cart" style="color:#5bc255"></i> Products
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link fs-5" href="#" style="color:#5bc255">
+                <i class="bi bi-cart fas fa-users" style="color:#5bc255"></i> Orders
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link fs-5" href="#" style="color:#5bc255">
+                <i class="bi bi-people fas fa-list-alt" style="color:#5bc255"></i> Users
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link fs-5" href="#" style="color:#5bc255">
+                <i class="bi bi-gift fas fa-ticket-alt" style="color:#5bc255"></i>"></i> Coupons
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link fs-5" href="#" style="color:#5bc255">
+                <i class="bi bi-megaphone fas fa-tags" style="color:#5bc255"></i> Offers
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link fs-5" href="#" style="color:#5bc255">
+                <i class="bi bi-graph-up fas fa-chart-line" style="color:#5bc255"></i> Sales Report
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link fs-5" href="#" style="color:#5bc255">
+                <i class="bi bi-box-arrow-right fas fa-sign-out-alt" style="color:#5bc255"></i> Logout
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="background-color: #ffe4e1;">
+        <h1 class="text-center py-3" style="color:#5bc255;">Edit Product</h1>
+        
+        <!-- Edit Product Form -->
+        <div class="card mt-4 shadow-lg border-0">
+          <div class="card-header" style="background-color: #5bc255; color: white;">
+            <h4>Edit Product</h4>
+          </div>
+          <div class="card-body" style="background-color: #ffe4e1;">
+            <form action="/api/admin/product/edit/<%= product._id %>" method="POST" enctype="multipart/form-data">
+              <div class="mb-3">
+                <label for="productName" class="form-label">Product Name</label>
+                <input type="text" class="form-control" id="productName" name="name" value="<%= product.name %>" required>
+              </div>
+              <div class="mb-3">
+                <label for="productDescription" class="form-label">Description</label>
+                <textarea class="form-control" id="productDescription" name="description" required><%= product.description %></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="productBrand" class="form-label">Brand</label>
+                <input type="text" class="form-control" id="productBrand" name="brand" value="<%= product.brand %>" required>
+              </div>
+              <div class="mb-3">
+                <label for="productPrice" class="form-label">Price</label>
+                <input type="number" class="form-control" id="productPrice" name="price" value="<%= product.price %>" required>
+              </div>
+              <div class="mb-3">
+                <label for="productQuantity" class="form-label">Quantity</label>
+                <input type="number" class="form-control" id="productQuantity" name="quantity" value="<%= product.quantity %>" required>
+              </div>
+              <div class="mb-3">
+                <label for="productCategory" class="form-label">Category</label>
+                <select class="form-control" id="productCategory" name="category" required>
+                  <% categories.forEach(category => { %>
+                    <option value="<%= category._id %>" <%= category._id === product.category._id ? 'selected' : '' %>><%= category.name %></option>
+                  <% }) %>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="productColour" class="form-label">Colour</label>
+                <input type="text" class="form-control" id="productColour" name="color" value="<%= product.color %>" required>
+              </div>
+              <div class="mb-3">
+                <label for="productImage" class="form-label">Image</label>
+                <input type="file" class="form-control" id="productImage" name="image">
+                <p class="mt-2">Current Image: <img src="/images/<%= product.image %>" alt="<%= product.name %>" style="width: 100px;"></p>
+              </div>
+              <button type="submit" class="btn btn-primary" style="background-color: #5bc255; border-color: #5bc255;">Save Changes</button>
+              <a href="/api/admin/addproduct" class="btn btn-secondary">Back to products</a>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

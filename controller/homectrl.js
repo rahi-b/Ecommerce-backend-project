@@ -1,4 +1,3 @@
-
 const homepage=(req,res)=>{
     res.render('user/index');
 }
@@ -42,13 +41,10 @@ const resetPassword=(req,res)=>{
     res.render('resetpassword');
 }
 
-const adminhome=(req,res)=>{
-    res.render('admin/index')
-}
-const category=(req,res)=>{
-    res.render('admin/category');
-}
+
+
+
 module.exports={homepage,homepage2,homepage3,shop,features,blog,about,contact,signup,forgotten,otpverfication,resetPassword,
-    productdetail,blogdetail,adminhome,category};
+    productdetail,blogdetail};
 
 

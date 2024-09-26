@@ -4,11 +4,10 @@ const categorySchema=new mongoose.Schema({
     name:{
         type:String,
         required:true,
-        unique:true
     },
     description:{
         type:String,
-        required:false, //optional description field
+        required:true, //optional description field
     },
     image:{
         type:String,
@@ -17,7 +16,11 @@ const categorySchema=new mongoose.Schema({
     createdAt:{
         type:Date,
         default:Date.now
-    }
+    },
+    updatedAt:{
+        type:Date,
+        defualt:Date.now
+}
 
 })
 

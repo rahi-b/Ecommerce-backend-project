@@ -41,7 +41,8 @@
     
     </div>
     <script src="js/signup.js"></script>
-    <script>  
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
 
         document.getElementById('btnpress').addEventListener('click',function(){
             const email=document.getElementById('typeemail').value;
@@ -58,7 +59,13 @@
         .then(response => response.json())
         .then(data => {
             if (data.success==false) {
-                document.getElementById('showerror').style.display="block";
+                // document.getElementById('showerror').style.display="block";
+                Swal.fire({
+                    icon:'error',
+                    title:'Login failed',
+                    text:'Invalid email or password . Please try again!',
+                    confirmButtonText:'OK'
+                });
 
             } else {
                 window.location.href=data.redirectUrl;
