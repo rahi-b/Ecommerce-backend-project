@@ -29,10 +29,12 @@ const addCategories= async(req,res)=>{
     try {
         const {name,description}= req.body;
         const image=req.file?req.file.filename:'';
+        console.log(name,description,image);
+
         const newCategory=new category({
-            name,
-            description,
-            image
+            name:name,
+            description:description,
+            image:image,
         })
         await newCategory.save();
         res.redirect('/api/admin/category');

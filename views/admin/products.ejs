@@ -35,7 +35,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link fs-5" href="#" style="color:#5bc255">
+              <a class="nav-link fs-5" href="/api/admin/users" style="color:#5bc255">
                 <i class="bi bi-people fas fa-list-alt" style="color:#5bc255"></i> Users
               </a>
             </li>
@@ -103,7 +103,7 @@
               </div>
               <div class="mb-3">
                 <label for="productName" class="form-label">Colour</label>
-                <input type="text" class="form-control" id="brandname" name="brand" required>
+                <input type="text" class="form-control" id="brandname" name="color" required>
               </div>
               <div class="mb-3">
                 <label for="productImage" class="form-label">Image</label>
@@ -149,7 +149,9 @@
                     <td><img src="/images/<%= product.image %>" alt="<%= product.name %>" style="width: 100px;"></td>
                     <td>
                       <a href="/api/admin/product/edit/<%= product._id %>" class="btn btn-warning btn-sm">Edit</a>
-                      <a href="/admin/products/delete/<%= product._id %>" class="btn btn-danger btn-sm">Delete</a>
+                      <form action="/api/admin/product/delete/<%= product._id %>" method="post">
+                        <button type="submit" class="btn btn-danger btn-sm mt-4">DELETE</button>
+                      </form>
                     </td>
                   </tr>
                 <% }) %>

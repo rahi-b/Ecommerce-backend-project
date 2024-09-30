@@ -14,11 +14,17 @@ const signup = async (req, res) => {
 
       const hashedpassword=await bcrypt.hash(password,10);
 
-      const newUser= await User.create({name:name,email:email,mobile:mobile,password:hashedpassword, isAdmin : false})
+      const newUser= await User.create({name:name,
+        email:email,
+        mobile:mobile,
+        password:hashedpassword, 
+        isAdmin : false,
+        is_blocked:false
+      })
 
-      if(newUser.isAdmin){
+      if(newUser.isAdmin && !newUser.is_blocked ){
         res.status(200).redirect('/api/admin/admin-home');
-      }else{
+      }else if(!newUser.isAdmin &&!newUser.is_blocked){
         res.status(200).redirect('/');
       }
       
@@ -28,7 +34,7 @@ const signup = async (req, res) => {
     }
   } catch (err) {
     //server error
-    console.error(err);
+    console.error(err.message);
     res.status(500).json({ success: false, message: "interval server error" });
   }
 };
@@ -55,14 +61,18 @@ let login = async (req, res) => {
       }
         req.session.email = findUser.email;
 
-        if(findUser.isAdmin){
+        if(findUser.isAdmin && !findUser.is_blocked){
          return res.status(200).json({success:true, message:"Admin login successfully", redirectUrl:"/api/admin/admin-home" });
         }
-        else{
+        else if(!findUser.isAdmin && !findUser.is_blocked){
          return res.status(200).json({success:true, message:"User login successfully", redirectUrl:"/" });
         }
-  } catch (err) {
+        else{
+          res.status(403).json({success:false, message:'User is blocked'});
+        }
+  } catch (error) {
     //server error passing
+    console.error(error.message);
     res.status(500).json({ message: "interval server error" });
   }
 };

@@ -20,11 +20,19 @@ var userSchema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    is_blocked:{
+        type:Boolean,
+        required:true,
+        defualt:false
+    },
     password:{
         type:String,
         required:true,
     },
+    createdAt:{
+        type:Date,
+        defualt:Date.now
+    }
 });
 
-//Export the model
 module.exports = mongoose.model('User', userSchema);

@@ -33,6 +33,10 @@ const AddProduct=async(req,res)=>{
         const{name,description,brand,price,category,quantity,color}=req.body;
         const image=req.file?req.file.filename:'';
 
+        if(!name || !image){
+            res.status(400).json({success:false,message:'Name and image is not required'});
+        }
+
         const newProduct= new Product({
             name,
             description,
@@ -78,4 +82,15 @@ const editProduct=async(req,res)=>{
 
 }    
 
-module.exports={AddproductPage,AddProduct,editproductPage,editProduct};
+const deleteProduct=async(req,res)=>{
+    try {
+        const productId=req.params.id;
+        await Product.findByIdAndDelete(productId);
+        res.redirect('/api/admin/addproduct');
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({success:false,message:'Internal Server error'});
+    }
+}
+
+module.exports={AddproductPage,AddProduct,editproductPage,editProduct,deleteProduct};
