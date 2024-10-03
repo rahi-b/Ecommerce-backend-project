@@ -14,7 +14,7 @@ const productSchema=new mongoose.Schema({
         required:true
     },
     price:{
-        type:Number,
+        type:String,
         required:true
     },
     image:{
@@ -23,7 +23,7 @@ const productSchema=new mongoose.Schema({
     },
     category:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'category',
+        ref:'Category',
     },
     quantity:{
         type:Number,
@@ -34,11 +34,11 @@ const productSchema=new mongoose.Schema({
     },
     createdAt:{
         type:Date,
-        defualt:Date.now
+        default:Date.now
     },
     updatedAt:{
         type:Date,
-        defualt:Date.now
+        default:Date.now
     }
 });
 

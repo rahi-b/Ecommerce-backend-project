@@ -30,7 +30,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link fs-5" href="#" style="color:#5bc255">
+              <a class="nav-link fs-5" href="/api/admin/orders" style="color:#5bc255">
                 <i class="bi bi-cart fas fa-users" style="color:#5bc255"></i> Orders
               </a>
             </li>
@@ -87,7 +87,7 @@
               </div>
               <div class="mb-3">
                 <label for="productPrice" class="form-label">Price</label>
-                <input type="number" class="form-control" id="productPrice" name="price" required>
+                <input type="number" class="form-control" id="productPrice" name="price" step="0.01" min="0" required>
               </div>
               <div class="mb-3">
                 <label for="productQuantity" class="form-label">Quantity</label>
@@ -140,7 +140,7 @@
                   <tr>
                     <td><%= index + 1 %></td>
                     <td><%= product.name %></td>
-                    <td><%= product.category.name %></td>
+                    <td><%= product.category ? product.category.name : 'No category '%></td>
                     <td><%= product.brand %></td>
                     <td>$<%= product.price %></td>
                     <td><%= product.quantity %></td>

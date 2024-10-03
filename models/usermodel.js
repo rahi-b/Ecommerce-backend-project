@@ -23,7 +23,7 @@ var userSchema = new mongoose.Schema({
     is_blocked:{
         type:Boolean,
         required:true,
-        defualt:false
+        default:false
     },
     password:{
         type:String,
@@ -31,7 +31,7 @@ var userSchema = new mongoose.Schema({
     },
     createdAt:{
         type:Date,
-        defualt:Date.now
+        default:Date.now
     }
 });
 

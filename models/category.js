@@ -7,7 +7,7 @@ const categorySchema=new mongoose.Schema({
     },
     description:{
         type:String,
-        required:true, //optional description field
+        required:true, 
     },
     image:{
         type:String,
@@ -19,9 +19,9 @@ const categorySchema=new mongoose.Schema({
     },
     updatedAt:{
         type:Date,
-        defualt:Date.now
-}
+        default:Date.now
+    },
 
-})
+});
 
-module.exports=mongoose.model('category',categorySchema);
+module.exports=mongoose.model('Category',categorySchema);

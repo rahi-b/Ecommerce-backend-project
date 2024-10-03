@@ -4,6 +4,7 @@ const {adminhome}=require('../controller/admin/adminctrl')
 const {categorypage,addCategories,editCategories,deleteCategories,editCategorypage}=require('../controller/admin/categoryctrl');
 const {AddproductPage,AddProduct,editproductPage,editProduct,deleteProduct}=require('../controller/admin/productctrl');
 const {usersPage,blockUser,unblockUser}=require('../controller/admin/usersctrl');
+const {getOrders}=require('../controller/admin/ordersctrl');
 const upload=require('../middlware/upload');
 
 router.get('/admin-home',adminhome);
@@ -14,6 +15,8 @@ router.get('/addproduct',AddproductPage)
 router.get('/product/edit/:id',editproductPage)
 
 router.get('/users',usersPage);
+
+router.get('/orders',getOrders);
 
 router.post('/addcategories',upload.single('image'),addCategories);
 router.post('/categories/edit/:id',upload.single('image'),editCategories)

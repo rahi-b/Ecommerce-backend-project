@@ -3,7 +3,7 @@ const Category=require('../../models/category');
 
 const AddproductPage=async(req,res)=>{
     try {
-        const products=await Product.find();
+        const products=await Product.find().populate('category');
         const categories=await Category.find();
         res.render('admin/products',{products,categories})
     } catch (error) {

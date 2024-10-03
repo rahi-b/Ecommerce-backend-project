@@ -1,3 +1,6 @@
+const Category=require('../models/category');
+const Product=require('../models/productModel');
+
 const homepage=(req,res)=>{
     res.render('user/index');
 }
@@ -7,8 +10,15 @@ const homepage2=(req,res)=>{
 const homepage3=(req,res)=>{
     res.render('user/home-03');
 }
-const shop=(req,res)=>{
-    res.render('user/product');
+const shop=async(req,res)=>{
+    try {
+        const categories=await Category.find();
+        const products=await Product.find().populate('category');
+        res.render('user/product',{categories,products});
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({success:false, message:'Internal server error'});
+    }
 }
 const productdetail=(req,res)=>{
     res.render('user/product-detail')

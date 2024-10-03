@@ -31,6 +31,10 @@ const addCategories= async(req,res)=>{
         const image=req.file?req.file.filename:'';
         console.log(name,description,image);
 
+        if(!image || !name){
+            res.status(404).json({success:false, message:'Image and categoryname is not found'});
+        }
+
         const newCategory=new category({
             name:name,
             description:description,
