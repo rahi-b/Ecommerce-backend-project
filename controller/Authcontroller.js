@@ -168,6 +168,23 @@ const resetPassword=async (req,res)=>{
 
 }
 
+const logout=async(req,res)=>{
+  try {
+      req.session.destroy(err=>{
+        if(err){
+          return res.status(500).json({success:false,message:'Could not logout. please try again'});
+        }
+        res.clearCookie('connect.sid');
+        return res.redirect('/signup');
+      });
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).json({success:false, message:'Internal server error'});
+  }
+}
 
 
-module.exports = { signup, login,forgetPassword , verifyOtp, resetPassword};
+
+
+
+module.exports = { signup, login,forgetPassword , verifyOtp, resetPassword, logout};

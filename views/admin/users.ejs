@@ -15,9 +15,9 @@
   </style>
 </head>
 <body>
+
   <div class="container-fluid">
     <div class="row">
-      
       <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block position-fixed min-vh-100 bg-dark sidebar collapse">
         <img src="/images/royal-store-logo.png" class="w-50 p-3" alt="IMG-LOGO">
         <div class="pt-3">
@@ -62,14 +62,15 @@
                 <i class="bi bi-graph-up fas fa-chart-line" style="color:#5bc255"></i> Sales Report
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link fs-5" href="#" style="color:#5bc255">
-                <i class="bi bi-box-arrow-right fas fa-sign-out-alt" style="color:#5bc255"></i> Logout
-              </a>
-            </li>
           </ul>
         </div>
+        <div class="logout" style="margin: 70% 0% 0% 5%;">
+          <form action="/api/authroute/logout" method="post">
+            <button type="submit" class="btn btn-danger fs-5" style="width:50%;">Logout</button>
+          </form>
+        </div>
       </nav>
+
       <!-- Main Content -->
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 min-vh-100" style="background-color: antiquewhite;">
         <div class="d-flex justify-content-center align-items-center pt-3 pb-2 mb-3 border-bottom">

@@ -1,9 +1,16 @@
 const Category=require('../models/category');
 const Product=require('../models/productModel');
 
-const homepage=(req,res)=>{
-    res.render('user/index');
-}
+const homepage=async(req,res)=>{
+    try {
+        const categories=await Category.find();
+        const products=await Product.find().populate('category');
+        res.render('user/index',{categories,products});
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({success:false,message:'Internal server error'});
+    }
+};
 const homepage2=(req,res)=>{
     res.render('user/home-02');
 }
@@ -50,8 +57,6 @@ const otpverfication=(req,res)=>{
 const resetPassword=(req,res)=>{
     res.render('resetpassword');
 }
-
-
 
 
 module.exports={homepage,homepage2,homepage3,shop,features,blog,about,contact,signup,forgotten,otpverfication,resetPassword,

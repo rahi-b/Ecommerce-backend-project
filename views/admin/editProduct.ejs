@@ -8,9 +8,10 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+
   <div class="container-fluid">
     <div class="row">
-      <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-dark min-vh-100 position-fixed sidebar collapse">
+      <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block position-fixed min-vh-100 bg-dark sidebar collapse">
         <img src="/images/royal-store-logo.png" class="w-50 p-3" alt="IMG-LOGO">
         <div class="pt-3">
           <ul class="nav flex-column">
@@ -54,12 +55,12 @@
                 <i class="bi bi-graph-up fas fa-chart-line" style="color:#5bc255"></i> Sales Report
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link fs-5" href="#" style="color:#5bc255">
-                <i class="bi bi-box-arrow-right fas fa-sign-out-alt" style="color:#5bc255"></i> Logout
-              </a>
-            </li>
           </ul>
+        </div>
+        <div class="logout" style="margin: 70% 0% 0% 5%;">
+          <form action="/api/authroute/logout" method="post">
+            <button type="submit" class="btn btn-danger fs-5" style="width:50%;">Logout</button>
+          </form>
         </div>
       </nav>
 
@@ -87,7 +88,7 @@
               </div>
               <div class="mb-3">
                 <label for="productPrice" class="form-label">Price</label>
-                <input type="number" class="form-control" id="productPrice" name="price" value="<%= product.price %>" required>
+                <input type="text" class="form-control" id="productPrice" name="price" value="<%= product.price %>" required>
               </div>
               <div class="mb-3">
                 <label for="productQuantity" class="form-label">Quantity</label>
@@ -119,5 +120,14 @@
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.getElementById('productPrice').addEventListener('blur',function(e){
+      let value=e.target.value.replace(/,/g, '');
+      if(!isNaN(value)&&value.length>0){
+        let formattedvalue=parseFloat(value).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+        e.target.value=formattedvalue;
+      }
+    })
+  </script>
 </body>
 </html>

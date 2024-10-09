@@ -931,13 +931,11 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
 	<script>
 		document.addEventListener('DOMContentLoaded',function(){
-			console.log('script is loaded ');
 			var $grid = $('.products-container').isotope({
 				itemSelector:'.isotope-item',
 				layoutMode:'fitRows'
 			});
 		const buttons=document.querySelectorAll('.filter-tope-group button');
-		console.log(buttons);
 
 		buttons.forEach(button=>{
 			button.addEventListener('click',()=>{
