@@ -22,6 +22,13 @@ const signup = async (req, res) => {
         is_blocked:false
       })
 
+      if(!newUser.is_blocked){
+        req.session.userId=newUser._id;
+        req.session.isAdmin=newUser.isAdmin;
+        req.session.isAuthenticated=true;
+      }
+      console.log('sessions after setting userid',req.session);
+
       if(newUser.isAdmin && !newUser.is_blocked ){
         res.status(200).redirect('/api/admin/admin-home');
       }else if(!newUser.isAdmin &&!newUser.is_blocked){
@@ -51,6 +58,7 @@ let login = async (req, res) => {
     }
 
     const findUser = await User.findOne({ email: email});
+
     if (!findUser){
       return res.status(401).json({success:false,message:"Invalid email or password"});
     }
@@ -60,6 +68,9 @@ let login = async (req, res) => {
         return res.status(401).json({success:false,message:"Invalid email or password"});
       }
         req.session.email = findUser.email;
+        req.session.userId=findUser._id;
+
+        
 
         if(findUser.isAdmin && !findUser.is_blocked){
          return res.status(200).json({success:true, message:"Admin login successfully", redirectUrl:"/api/admin/admin-home" });

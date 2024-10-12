@@ -1,7 +1,10 @@
 const express=require('express');
 const route=express.Router();
+const {addtoCart}=require('../controller/user/cartctrl');
+const {homepage,homepage2,homepage3,shop,features,blog,about,
+    contact,signup,forgotten,otpverfication,resetPassword,
+    productdetail,blogdetail}=require('../controller/homectrl');
 
-const {homepage,homepage2,homepage3,shop,features,blog,about,contact,signup,forgotten,otpverfication,resetPassword,productdetail,blogdetail}=require('../controller/homectrl');
 
 route.get('/',homepage)
 route.get('/homepage-2',homepage2)
@@ -17,6 +20,9 @@ route.get('/signup',signup)
 route.get('/forgotten',forgotten)
 route.get('/otpverification',otpverfication)
 route.get('/resetpassword',resetPassword)
+
+
+route.post('/addtocart',addtoCart);
 
 
 

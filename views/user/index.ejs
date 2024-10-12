@@ -740,6 +740,7 @@
 							<div class="block2-pic hov-img0">
 								<img src="/images/<%= product.image %>" alt="<%= product.name %>">
 								<a href="#" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1"
+								data-product-id="<%= product._id %>"
 								data-name="<%= product.name %>"
 								data-price="$<%= product.price %>"
 								data-description="<%= product.description %>"
@@ -957,14 +958,14 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 								<div class="wrap-slick3-dots"></div>
 								<div class="wrap-slick3-arrows flex-sb-m flex-w"></div>
 	
-								<div class="slick3 gallery-lb">
-									<div class="item-slick3" data-thumb="images/product-detail-01.jpg">
+								<div class="gallery-lb">	
+									<div class="item-slick3">
 										<div class="wrap-pic-w pos-relative">
 											<img class="js-modal-image" src="images/product-detail-01.jpg" alt="IMG-PRODUCT">
 	
-											<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="images/product-detail-01.jpg">
+											<!-- <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04 " href="#">
 												<i class="fa fa-expand"></i>
-											</a>
+											</a> -->
 										</div>
 									</div>
 								</div>
@@ -974,7 +975,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 					
 					<div class="col-md-6 col-lg-5 p-b-30">
 						<div class="p-r-50 p-t-5 p-lr-0-lg">
-							<h4 class="mtext-105 cl2 js-modal-name p-b-14">
+							<h4 class="mtext-105 cl2 p-b-14 js-modal-name">
 								Product Name
 							</h4>
 	
@@ -988,6 +989,14 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 							
 
 							<div class="p-t-33">
+								<div class="flex-w flex-r-m p-b-10">
+									<div class="size-203 flex-c-m respon6">
+										ProductId
+									</div>
+									<div class="size-204 respon6-next">
+										<span class="js-modal-productId">productId</span>
+									</div>
+								</div>
 								<div class="flex-w flex-r-m p-b-10">
 									<div class="size-203 flex-c-m respon6">
 										Brand
@@ -1024,6 +1033,15 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 										<span class="js-modal-color">Color Name</span>
 									</div>
 								</div>
+
+								<div class="flex-w flex-r-m p-b-10">
+									<div class="size-203 flex-c-m respon6">
+										Available of quantity
+									</div>
+									<div class="size-204 respon6-next">
+										<span class="js-modal-quantity">no of quantity</span>
+									</div>
+								</div>
 	
 								<div class="flex-w flex-r-m p-b-10">
 									<div class="size-203 flex-c-m respon6">
@@ -1043,7 +1061,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 											</div>
 										</div>
 	
-										<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
+										<button type="button" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
 											Add to cart
 										</button>
 									</div>
@@ -1101,6 +1119,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<script src="js/slick-custom.js"></script>
 <!--===============================================================================================-->
 	<script src="vendor/parallax100/parallax100.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script>
         $('.parallax100').parallax100();
 	</script>
@@ -1119,6 +1138,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 		});
 	</script>
 	<script>
+		document.addEventListener('DOMContentLoaded',function(){
 		document.querySelectorAll('.js-show-modal1').forEach(button=>{
 			button.addEventListener('click',function(event){
 				event.preventDefault();
@@ -1130,8 +1150,22 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 				const brand=this.getAttribute('data-brand');
 				const color=this.getAttribute('data-color');
 				const quantity=this.getAttribute('data-quantity');
+				const productId=this.getAttribute('data-product-id');
+
+				document.querySelector('.js-modal-name').textContent=name;
+				document.querySelector('.js-modal-price').textContent=price;
+				document.querySelector('.js-modal-description').textContent=description;
+				document.querySelector('.js-modal-image').setAttribute('src',image);
+				document.querySelector('.js-modal-brand').textContent=brand;
+				document.querySelector('.js-modal-color').textContent=color;
+				document.querySelector('.js-modal-quantity').textContent=quantity;
+				document.querySelector('.js-modal-productId').textContent=productId;
+
+				document.querySelector('.js-modal1').classList.add('show-modal1');
 			})
 		})
+
+	})
 	</script>
 <!--===============================================================================================-->
 	<script src="vendor/isotope/isotope.pkgd.min.js"></script>
@@ -1162,16 +1196,51 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 				$(this).off('click');
 			});
 		});
-
-		/*---------------------------------------------*/
-
-		$('.js-addcart-detail').each(function(){
-			var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
-			$(this).on('click', function(){
-				swal(nameProduct, "is added to cart !", "success");
-			});
-		});
 	
+	</script>
+	<script>
+		document.querySelector('.js-addcart-detail').addEventListener('click',async function(){
+
+			const productId=document.querySelector('.js-modal-productId').innerText.trim();
+			const quantity=document.querySelector('input[name="num-product"]').value;
+
+			console.log('productId is',productId);
+			console.log('quantity is',quantity);
+
+			try {
+				const response=await fetch('/addtocart',{
+					method:'POST',
+					headers:{
+						'Content-Type':'application/json',
+					},
+					body:JSON.stringify({
+						productId:productId,
+						quantity:quantity
+					}),
+				})
+				const result=await response.json();
+
+
+				if(result.success){
+					Swal.fire({
+						icon:'success',
+						title:'Addtocart',
+						text:'Your product added to cart successfully',
+						confirmButtonText:'OK',
+					});
+				}else{
+					Swal.fire({
+						icon:'failed',
+						title:'Addtocart failed',
+						text:'Your product added failed',
+						confirmButtonText:'OK'
+					})
+				}
+			} catch (error) {
+				console.error('Error Product added',error);
+				
+			}
+		})
 	</script>
 <!--===============================================================================================-->
 	<script src="vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>

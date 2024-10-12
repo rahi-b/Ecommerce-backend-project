@@ -6,7 +6,7 @@ const bodyparser = require("body-parser");
 const session = require("express-session");
 const PORT = process.env.PORT || 5000;
 const authRouter = require("./routes/Authroute");
-const homeRouter= require("./routes/homeroute");
+const userRouter= require("./routes/Userroute");
 const adminRouter=require('./routes/Adminroute');
 const { notfound, errorhandler } = require("./middlware/errorhandler");
 const MONGOURL = process.env.MONGO_URI;
@@ -18,7 +18,7 @@ app.use(
   session({
     secret: "secret_key",
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: { secure: false },
   })
 );
@@ -26,7 +26,7 @@ app.use(express.static("public/user"));
 app.use(express.static("public/admin"));
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
-app.use(homeRouter);
+app.use(userRouter);
 app.use("/api/authroute", authRouter);
 app.use('/api/admin',adminRouter);
 
