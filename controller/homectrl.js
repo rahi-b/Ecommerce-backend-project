@@ -27,6 +27,24 @@ const shop=async(req,res)=>{
         res.status(500).json({success:false, message:'Internal server error'});
     }
 }
+const productSearch=async(req,res)=>{
+    try {
+        const {query}=req.query;
+
+        const products=await Product.find({
+            name:{$regex:query,$options:'i'}
+        }).populate({
+            path:'category',
+            match:{name:{$regex:query,$options:'i'}}
+        });
+        res.status(200).json({success:true,products});
+
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({success:false,message:'Internal server error'});
+    }
+}
+
 const productdetail=(req,res)=>{
     res.render('user/product-detail')
 }
@@ -60,6 +78,6 @@ const resetPassword=(req,res)=>{
 
 
 module.exports={homepage,homepage2,homepage3,shop,features,blog,about,contact,signup,forgotten,otpverfication,resetPassword,
-    productdetail,blogdetail};
+    productdetail,blogdetail,productSearch};
 
 

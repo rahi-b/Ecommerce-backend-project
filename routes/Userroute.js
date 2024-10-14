@@ -3,7 +3,7 @@ const route=express.Router();
 const {addtoCart}=require('../controller/user/cartctrl');
 const {homepage,homepage2,homepage3,shop,features,blog,about,
     contact,signup,forgotten,otpverfication,resetPassword,
-    productdetail,blogdetail}=require('../controller/homectrl');
+    productdetail,blogdetail,productSearch}=require('../controller/homectrl');
 
 
 route.get('/',homepage)
@@ -20,6 +20,7 @@ route.get('/signup',signup)
 route.get('/forgotten',forgotten)
 route.get('/otpverification',otpverfication)
 route.get('/resetpassword',resetPassword)
+route.get('/searchproduct',productSearch)
 
 
 route.post('/addtocart',addtoCart);
