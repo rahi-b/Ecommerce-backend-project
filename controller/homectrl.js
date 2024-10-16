@@ -48,9 +48,6 @@ const productSearch=async(req,res)=>{
 const productdetail=(req,res)=>{
     res.render('user/product-detail')
 }
-const features=(req,res)=>{
-    res.render('user/shoping-cart');
-}
 const blog=(req,res)=>{
     res.render('user/blog');
 }
@@ -77,7 +74,7 @@ const resetPassword=(req,res)=>{
 }
 
 
-module.exports={homepage,homepage2,homepage3,shop,features,blog,about,contact,signup,forgotten,otpverfication,resetPassword,
+module.exports={homepage,homepage2,homepage3,shop,blog,about,contact,signup,forgotten,otpverfication,resetPassword,
     productdetail,blogdetail,productSearch};
 
 

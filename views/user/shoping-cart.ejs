@@ -87,7 +87,7 @@
 							</li>
 
 							<li class="label1" data-label1="hot">
-								<a href="/features">Features</a>
+								<a href="/cart">Shopping-cart</a>
 							</li>
 
 							<li>
@@ -201,7 +201,7 @@
 				</li>
 
 				<li>
-					<a href="/features" class="label1 rs1" data-label1="hot">Features</a>
+					<a href="/cart" class="label1 rs1" data-label1="hot">Shopping-cart</a>
 				</li>
 
 				<li>
@@ -352,53 +352,43 @@
 									<th class="column-5">Total</th>
 								</tr>
 
+								<% 
+								let grandTotal=0;
+								cart.products.forEach(product=>{ 
+									const productPrice=parseFloat(product.productId.price.replace(/,/g,'')) || 0;
+									const productQuantity=parseInt(product.quantity) || 0;
+									const productTotal=productPrice * productQuantity;
+
+									grandTotal+=productTotal;
+
+									%>
 								<tr class="table_row">
 									<td class="column-1">
 										<div class="how-itemcart1">
-											<img src="images/item-cart-04.jpg" alt="IMG">
+											<img src="/images/<%= product.productId.image %>" alt="Product name">
 										</div>
 									</td>
-									<td class="column-2">Fresh Strawberries</td>
-									<td class="column-3">$ 36.00</td>
+									<td class="column-2"><%= product.productId.name %></td>
+									<td class="column-3">$<%= product.productId.price %></td>
 									<td class="column-4">
 										<div class="wrap-num-product flex-w m-l-auto m-r-0">
 											<div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
 												<i class="fs-16 zmdi zmdi-minus"></i>
 											</div>
 
-											<input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product1" value="1">
+											<input class="mtext-104 cl3 txt-center num-product" type="number" data-price="<%= product.productId.price %>" value="<%= product.quantity %>">
 
 											<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
 												<i class="fs-16 zmdi zmdi-plus"></i>
 											</div>
 										</div>
 									</td>
-									<td class="column-5">$ 36.00</td>
+									<td class="column-5">
+										<span class="product-total"><%= productTotal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) %></span>
+									</td>
 								</tr>
 
-								<tr class="table_row">
-									<td class="column-1">
-										<div class="how-itemcart1">
-											<img src="images/item-cart-05.jpg" alt="IMG">
-										</div>
-									</td>
-									<td class="column-2">Lightweight Jacket</td>
-									<td class="column-3">$ 16.00</td>
-									<td class="column-4">
-										<div class="wrap-num-product flex-w m-l-auto m-r-0">
-											<div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
-												<i class="fs-16 zmdi zmdi-minus"></i>
-											</div>
-
-											<input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product2" value="1">
-
-											<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
-												<i class="fs-16 zmdi zmdi-plus"></i>
-											</div>
-										</div>
-									</td>
-									<td class="column-5">$ 16.00</td>
-								</tr>
+								<% }) %>
 							</table>
 						</div>
 
@@ -670,6 +660,40 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
 <!--===============================================================================================-->
 	<script src="vendor/select2/select2.min.js"></script>
+
+	<script>
+		function updateProductTotal(row){
+			const quantity=row.querySelector('.num-product').value;
+			const price=parseFloat(row.querySelector('.num-product').getAttribute('data-price'));
+			const total=(price*quantity).toLocaleString('en-US',{minimumFractionDigits:1});
+			row.querySelector('.product-total').textContent=`$${total}`;
+		};
+
+		document.querySelectorAll('.num-product').forEach((input)=>{
+			input.addEventListener('change',function(){
+				updateProductTotal(this.closest('.table_row'));
+			});
+		});
+
+		document.querySelectorAll('.btn-num-product-up').forEach(btn=>{
+			btn.addEventListener('click',function(){
+				const input=this.closest('.wrap-num-product').querySelector('.num-product');
+				input.value=parseInt(input.value)+1;
+				updateProductTotal(this.closest('.table_row'));
+			})
+		})
+
+		document.querySelectorAll('.btn-num-product-down').forEach(btn=>{
+			btn.addEventListener('click',function(){
+				const input=this.closest('.wrap-num-product').querySelector('.num-product');
+				if(input.value >1){
+					input.value=parseInt(input.value)-1;
+					updateProductTotal(this.closest('.table_row'))
+				}
+			})
+		})
+	</script>
+
 	<script>
 		$(".js-select2").each(function(){
 			$(this).select2({
