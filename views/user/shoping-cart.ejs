@@ -350,6 +350,7 @@
 									<th class="column-3">Price</th>
 									<th class="column-4">Quantity</th>
 									<th class="column-5">Total</th>
+									<th class="column-6"></th>
 								</tr>
 
 								<% 
@@ -376,7 +377,8 @@
 												<i class="fs-16 zmdi zmdi-minus"></i>
 											</div>
 
-											<input class="mtext-104 cl3 txt-center num-product" type="number" data-price="<%= product.productId.price %>" value="<%= product.quantity %>">
+											<input class="mtext-104 cl3 txt-center num-product" type="number" data-price="<%= product.productId.price %>" value="<%= product.quantity %>" min="1"
+											oninput="this.value=Math.max(1,this.value)">
 
 											<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
 												<i class="fs-16 zmdi zmdi-plus"></i>
@@ -384,8 +386,15 @@
 										</div>
 									</td>
 									<td class="column-5">
-										<span class="product-total"><%= productTotal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) %></span>
+										<span class="product-total">$<%= productTotal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) %></span>
 									</td>
+									<td class="column-6">
+											<button class="flex-c-m stext-101 cl2 size-119 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-10 remove-button"
+											data-product-id="<%= product.productId._id%>">
+												Remove
+											</button>
+											
+										</td>
 								</tr>
 
 								<% }) %>
@@ -400,10 +409,13 @@
 									Apply coupon
 								</div>
 							</div>
-
-							<div class="flex-c-m stext-101 cl2 size-119 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-10">
-								Update Cart
-							</div>
+							
+								<div class="flex-c-m stext-101 cl2 size-119 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-10">
+										<button type="button" id="clear-cart-button">
+											Clear Cart
+										</button>
+								</div>
+							
 						</div>
 					</div>
 				</div>
@@ -422,8 +434,8 @@
 							</div>
 
 							<div class="size-209">
-								<span class="mtext-110 cl2">
-									$79.65
+								<span class="mtext-110 cl2 grand-total">
+									$<%= grandTotal.toLocaleString({minimumFractionDigits:2,maximumFractionDigits:2}) %>
 								</span>
 							</div>
 						</div>
@@ -480,15 +492,16 @@
 							</div>
 
 							<div class="size-209 p-t-1">
-								<span class="mtext-110 cl2">
-									$79.65
+								<span class="mtext-110 cl2 grand-total">
+									$<%= grandTotal.toLocaleString({minimumFractionDigits:2,maximumFractionDigits:2}) %>
 								</span>
 							</div>
 						</div>
 
-						<button class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
+						<a href="/checkout" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
 							Proceed to Checkout
-						</button>
+						</a>
+						
 					</div>
 				</div>
 			</div>
@@ -660,38 +673,182 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
 <!--===============================================================================================-->
 	<script src="vendor/select2/select2.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 	<script>
+
 		function updateProductTotal(row){
-			const quantity=row.querySelector('.num-product').value;
-			const price=parseFloat(row.querySelector('.num-product').getAttribute('data-price'));
-			const total=(price*quantity).toLocaleString('en-US',{minimumFractionDigits:1});
+			const quantity=parseInt(row.querySelector('.num-product').value);
+			const price=parseFloat(row.querySelector('.num-product').getAttribute('data-price').replace(/,/g, ''));
+			const total=(price*quantity).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 			row.querySelector('.product-total').textContent=`$${total}`;
+
+			updateGrandTotal();
 		};
 
-		document.querySelectorAll('.num-product').forEach((input)=>{
-			input.addEventListener('change',function(){
-				updateProductTotal(this.closest('.table_row'));
+		function updateGrandTotal(){
+			let newGrandTotal=0;
+
+			document.querySelectorAll('.table_row').forEach(row=>{
+				const productTotal=parseFloat(row.querySelector('.product-total').textContent.replace(/[\$,]/g, ''));
+				newGrandTotal+=productTotal;
 			});
-		});
 
-		document.querySelectorAll('.btn-num-product-up').forEach(btn=>{
-			btn.addEventListener('click',function(){
-				const input=this.closest('.wrap-num-product').querySelector('.num-product');
-				input.value=parseInt(input.value)+1;
-				updateProductTotal(this.closest('.table_row'));
-			})
+			document.querySelectorAll('.grand-total').forEach(grandTotalElem=>{
+				grandTotalElem.textContent=`$${newGrandTotal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`
+			});
+		}
+
+		async function updateQuantity(e){
+			const row=e.target.closest('.table_row');
+			const input=row.querySelector('.num-product');
+			const productId=row.dataset.productId;
+			let newQuantity=parseFloat(input.value);
+
+			if(e.target.classList.contains('btn-num-product-up')){
+				newQuantity;
+			}else if(e.target.classList.contains('btn-num-product-down')){
+				newQuantity;
+			}
+
+			input.value=newQuantity;
+
+			updateProductTotal(row);
+
+			await fetch('/cart/updateQuantity',{
+					method:'POST',
+					headers:{
+						'Content-Type' :'application/json'
+					},
+					body:JSON.stringify({productId,quantity:newQuantity})
+				})
+		}
+
+		document.querySelector('.table-shopping-cart').addEventListener('click',(e)=>{
+			if(e.target.classList.contains('btn-num-product-up') || e.target.classList.contains('btn-num-product-down')){
+
+				updateQuantity(e);
+			}
 		})
 
-		document.querySelectorAll('.btn-num-product-down').forEach(btn=>{
-			btn.addEventListener('click',function(){
-				const input=this.closest('.wrap-num-product').querySelector('.num-product');
-				if(input.value >1){
-					input.value=parseInt(input.value)-1;
-					updateProductTotal(this.closest('.table_row'))
+		updateGrandTotal();	
+
+	</script>
+
+<!-- 
+	<script>
+		document.querySelectorAll('.btn-num-product-up, .btn-num-product-down').forEach(btn=>{
+			btn.addEventListener('click',async function(e){
+				const input=e.target.closest('.wrap-num-product').querySelector('.num-product');
+				const productId=btn.closest('tr').dataset.productId;
+				let newQuantity=parseInt(input.value);
+
+				if(e.target.closest('.btn-num-product-up')){
+					newQuantity+=1;
+				}else if(e.target.closest('.btn-num-product-down')){
+					newQuantity-=1;
 				}
+
+				input.value=newQuantity;
+				updateProductTotal(e.target.closest('.table_row'));
+
+			
 			})
 		})
+	</script> -->
+	<script>
+		document.addEventListener('DOMContentLoaded',function(){
+
+			const removeButton=document.querySelectorAll('.remove-button');
+
+			removeButton.forEach(button=>{
+				button.addEventListener('click', async function(event){
+					event.preventDefault();
+
+					const productId=button.getAttribute('data-product-id');
+					console.log('product id is',productId);
+
+					try {
+						const response =await fetch('/removecart',{
+							method:'POST',
+							headers:{
+								'Content-Type':'application/json',
+							},
+							body:JSON.stringify({productId:productId})
+						});
+						const result=await response.json();
+						if(result.success){
+							button.closest('tr').remove();
+							Swal.fire({
+						icon:'success',
+						title:'Remove product',
+						text:'Your product remove from cart successfully',
+						confirmButtonText:'OK',
+					});
+						}else{
+							Swal.fire({
+						icon:'error',
+						title:'remove product',
+						text:'Your product removing failed',
+						confirmButtonText:'OK',
+					});
+						}
+						
+					} catch (error) {
+						console.error('Error message',error.message);
+					}
+				})
+			})
+
+		})
+
+	</script>
+
+	<script>
+		document.getElementById('clear-cart-button').addEventListener('click',async function(event){
+			event.preventDefault();
+
+			try {
+				const response=await fetch('/clearcart',{
+					method:'POST',
+					headers:{
+						'Content-type':'application/json'
+					}
+				});
+				const result=await response.json();
+				if(result.success){
+					Swal.fire({
+						icon:'success',
+						title:'cart cleared',
+						text:'Your all products are cleared',
+						confirmButtonText:'OK'
+					});
+					clearCartUI();
+				}else{
+					Swal.fire({
+						icon:'error',
+						title:'Error',
+						text:'Your all products are not removed',
+						confirmButtonText:'OK'
+					})
+				}
+				
+			} catch (error) {
+				console.error(error.message)
+			}
+		})
+		function clearCartUI(){
+			const cartTablebody=document.querySelector('.table-shopping-cart');
+			cartTablebody.innerHTML=`
+			<tr class='table_row'>
+				<td colspan="6" class="text-center">Your cart is empty! </td>
+			<tr>`;
+
+				document.querySelectorAll('.grand-total').forEach(function(element){
+					element.innerText='$0.00';
+				})
+		}
 	</script>
 
 	<script>

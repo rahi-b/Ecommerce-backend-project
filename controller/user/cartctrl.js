@@ -57,4 +57,60 @@ const getCart=async(req,res)=>{
     }
 }
 
-module.exports= {addtoCart,getCart}
+const cartUpdateQuantity=async(req,res)=>{
+    try {
+        const userId=req.session.userId;
+        const {productId,quantity}=req.body;
+
+        await Cart.updateOne(
+            {user:userId,"products.productId":productId},
+            {$set:{"products.$.quantity":quantity}}
+        );
+        return res.status(200).json({success:true,message:'Quantity updating success'});
+    } catch (error) {
+        console.error(error.message);
+        return res.status(500).json({success:false,message:'Internal server error'});
+    }
+}
+
+const removeCart=async(req,res)=>{
+    try {
+        const userId=req.session.userId;
+        const { productId }=req.body;
+
+        let cart=await Cart.findOne({user:userId});
+
+        if(cart){
+            cart.products=cart.products.filter(p=>p.productId.toString()!== productId);
+
+            await cart.save();
+            return res.status(200).json({success:true,message:'Product removed from cart successfull',cart});
+        }else{
+            return res.status(404).json({success:false,message:'Cart is not found'});
+        }
+    } catch (error) {
+        console.error('Error',error.message);
+        return res.status(500).json({success:false,message:'Internal server error'});
+    }
+}
+
+const clearCart=async(req,res)=>{
+    try {
+        const userId=req.session.userId;
+        
+        const cart =await Cart.findOne({user:userId});
+
+        if(cart){
+            cart.products=[];
+            await cart.save();
+
+            return res.status(200).json({success:true,message:'All product removed from cart'});
+        }else{
+            return res.status(404).json({success:false,message:'Cart not found'});
+        }
+    } catch (error) {
+        console.error(error.message);
+        return res.status(500).json({success:false,message:'Internal server error'});
+    }
+}
+module.exports= {addtoCart,getCart,removeCart,clearCart,cartUpdateQuantity};
