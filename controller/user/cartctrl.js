@@ -62,11 +62,23 @@ const cartUpdateQuantity=async(req,res)=>{
         const userId=req.session.userId;
         const {productId,quantity}=req.body;
 
-        await Cart.updateOne(
+        const cartItem=await Cart.findOne({user:userId, "products.productId":productId});
+
+        if(!cartItem){
+            console.error(`No cart for found user: ${userId} with product:${productId}`);
+            return res.status(404).json({success:false,message:'Product not found in cart'});
+        }
+
+       const result= await Cart.updateOne(
             {user:userId,"products.productId":productId},
             {$set:{"products.$.quantity":quantity}}
         );
-        return res.status(200).json({success:true,message:'Quantity updating success'});
+        if(result.nModified > 0){
+            return res.status(200).json({success:true,message:'Quantity updating success'});
+        }else{
+            return res.status(400).json({success:false,message:'Product not found quantity unchanged'});
+        }
+      
     } catch (error) {
         console.error(error.message);
         return res.status(500).json({success:false,message:'Internal server error'});

@@ -363,7 +363,7 @@
 									grandTotal+=productTotal;
 
 									%>
-								<tr class="table_row">
+								<tr class="table_row" data-product-id="<%= product.productId._id %>">
 									<td class="column-1">
 										<div class="how-itemcart1">
 											<img src="/images/<%= product.productId.image %>" alt="Product name">
@@ -676,87 +676,82 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
-	<script>
+		<script>
 
-		function updateProductTotal(row){
-			const quantity=parseInt(row.querySelector('.num-product').value);
-			const price=parseFloat(row.querySelector('.num-product').getAttribute('data-price').replace(/,/g, ''));
-			const total=(price*quantity).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-			row.querySelector('.product-total').textContent=`$${total}`;
+			function updateProductTotal(row){
+				const quantity=parseInt(row.querySelector('.num-product').value);
+				const price=parseFloat(row.querySelector('.num-product').getAttribute('data-price').replace(/,/g, ''));
+				const total=(price*quantity).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+				row.querySelector('.product-total').textContent=`$${total}`;
 
-			updateGrandTotal();
-		};
+				updateGrandTotal();
+			};
 
-		function updateGrandTotal(){
-			let newGrandTotal=0;
+			function updateGrandTotal(){
+				let newGrandTotal=0;
 
-			document.querySelectorAll('.table_row').forEach(row=>{
-				const productTotal=parseFloat(row.querySelector('.product-total').textContent.replace(/[\$,]/g, ''));
-				newGrandTotal+=productTotal;
-			});
+				document.querySelectorAll('.table_row').forEach(row=>{
+					const productTotal=parseFloat(row.querySelector('.product-total').textContent.replace(/[\$,]/g, ''));
+					newGrandTotal+=productTotal;
+				});
 
-			document.querySelectorAll('.grand-total').forEach(grandTotalElem=>{
-				grandTotalElem.textContent=`$${newGrandTotal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`
-			});
-		}
-
-		async function updateQuantity(e){
-			const row=e.target.closest('.table_row');
-			const input=row.querySelector('.num-product');
-			const productId=row.dataset.productId;
-			let newQuantity=parseFloat(input.value);
-
-			if(e.target.classList.contains('btn-num-product-up')){
-				newQuantity;
-			}else if(e.target.classList.contains('btn-num-product-down')){
-				newQuantity;
+				document.querySelectorAll('.grand-total').forEach(grandTotalElem=>{
+					grandTotalElem.textContent=`$${newGrandTotal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`
+				});
 			}
 
-			input.value=newQuantity;
+			async function updateQuantity(e){
+				
 
-			updateProductTotal(row);
+				const row=e.target.closest('.table_row');
+				const input=row.querySelector('.num-product');
+				const productId=row.dataset.productId;
+				let quantity=parseFloat(input.value);
 
-			await fetch('/cart/updateQuantity',{
-					method:'POST',
-					headers:{
-						'Content-Type' :'application/json'
-					},
-					body:JSON.stringify({productId,quantity:newQuantity})
-				})
-		}
-
-		document.querySelector('.table-shopping-cart').addEventListener('click',(e)=>{
-			if(e.target.classList.contains('btn-num-product-up') || e.target.classList.contains('btn-num-product-down')){
-
-				updateQuantity(e);
-			}
-		})
-
-		updateGrandTotal();	
-
-	</script>
-
-<!-- 
-	<script>
-		document.querySelectorAll('.btn-num-product-up, .btn-num-product-down').forEach(btn=>{
-			btn.addEventListener('click',async function(e){
-				const input=e.target.closest('.wrap-num-product').querySelector('.num-product');
-				const productId=btn.closest('tr').dataset.productId;
-				let newQuantity=parseInt(input.value);
-
-				if(e.target.closest('.btn-num-product-up')){
-					newQuantity+=1;
-				}else if(e.target.closest('.btn-num-product-down')){
-					newQuantity-=1;
+				if(e.target.classList.contains('btn-num-product-up')){
+					quantity;
+				}else if(e.target.classList.contains('btn-num-product-down') && quantity >1){
+					quantity;
 				}
 
-				input.value=newQuantity;
-				updateProductTotal(e.target.closest('.table_row'));
+				input.value=quantity;
 
-			
+				updateProductTotal(row);
+
+				console.log('quantity is',quantity);
+				console.log('product id is',productId);
+
+				try {
+					
+					const response=await fetch('/cart/updateQuantity',{
+						method:'POST',
+						headers:{
+							'Content-Type' :'application/json'
+						},
+						body:JSON.stringify({productId,quantity})
+					})
+					const data=await response.json();
+					if(!data.success){
+					     console.log(data.message || 'Failed up to quantity');
+					}
+				} catch (error) {
+					console.error('Error updating quantity:',error);
+				}
+				
+			}
+
+			document.querySelector('.table-shopping-cart').addEventListener('click',(e)=>{
+				if(e.target.classList.contains('btn-num-product-up') || e.target.classList.contains('btn-num-product-down')){
+
+					updateQuantity(e);
+				}
 			})
-		})
-	</script> -->
+
+			updateGrandTotal();	
+
+		</script>
+
+
 	<script>
 		document.addEventListener('DOMContentLoaded',function(){
 
